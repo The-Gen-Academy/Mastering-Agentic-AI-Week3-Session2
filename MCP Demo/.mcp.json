@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "course-platform": {
+      "command": "uv",
+      "args": ["run", "python", "/Users/arvindna/Desktop/Maven Demos/Week3/Session2/MCP Demo/mcp_server/mcp_server.py"],
+      "env": {
+        "UV_PROJECT": "/Users/arvindna/Desktop/Maven Demos/Week3/Session2/MCP Demo"
+      }
+    }
+  }
+}

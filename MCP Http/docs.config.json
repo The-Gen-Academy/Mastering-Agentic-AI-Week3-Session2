@@ -1,0 +1,52 @@
+[
+  {
+    "name": "cohort-faq",
+    "title": "Mastering Agentic AI Cohort FAQ",
+    "description": "Frequently asked questions for the August 2026 Mastering Agentic AI cohort. Covers general program questions that apply across all weeks.",
+    "kind": "drive_file",
+    "doc_id": "1jfWqpSmsoZmkDOcCRw0WOZw3f9rBvxaf",
+    "mime_type": "application/pdf",
+    "week_scope": "all_weeks",
+    "source_role": "broad_faq"
+  },
+  {
+    "name": "onboarding-guidebook",
+    "title": "August 2026 Onboarding Guidebook",
+    "description": "Onboarding guidebook for the August 2026 cohort: setup, schedule, tools, and program logistics that apply across all weeks.",
+    "kind": "google_doc",
+    "doc_id": "1KWVIk6lzzZXHZ8-hXHHwGHCtGP9wSNP4qaqG8ixuTDA",
+    "format": "md",
+    "week_scope": "all_weeks",
+    "source_role": "cohort_guidebook"
+  },
+  {
+    "name": "week-1-project-handout",
+    "title": "Week 1 Project Handout",
+    "description": "Week 1 project (Data Analysis with Vibe Coding): requirements, deliverables, and submission logistics.",
+    "kind": "google_doc",
+    "doc_id": "1CBqSbFnyb84NdYcIgQJk72ZgdjY0t97e6fTDru5uqJI",
+    "format": "md",
+    "week_scope": "week_1",
+    "source_role": "weekly_project_logistics"
+  },
+  {
+    "name": "week-2-rag-project-handout",
+    "title": "Week 2 RAG Project Handout",
+    "description": "Week 2 project (Build Your RAG Application): requirements, deliverables, and submission logistics.",
+    "kind": "google_doc",
+    "doc_id": "1cUEnX2H-fKBtsIdLpA5hgpQ_WtqXKp1fDAtljej335w",
+    "format": "md",
+    "week_scope": "week_2",
+    "source_role": "weekly_project_logistics"
+  },
+  {
+    "name": "week-3-agent-project-handout",
+    "title": "Week 3 Agent Project Handout",
+    "description": "Week 3 project (Build Your AI Agent): requirements, deliverables, and submission logistics.",
+    "kind": "google_doc",
+    "doc_id": "149rHZg-R1ebfzIesSY0_1TYulfj_CIEYv0y1LPyLfoI",
+    "format": "md",
+    "week_scope": "week_3",
+    "source_role": "weekly_project_logistics"
+  }
+]

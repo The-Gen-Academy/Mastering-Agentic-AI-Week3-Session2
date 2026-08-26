@@ -1,0 +1,241 @@
+{
+  "title": "Mastering Agentic AI",
+  "subtitle": "Certification by The Gen Academy",
+  "weeks": [
+    {
+      "number": 1,
+      "title": "Generative AI Building Blocks",
+      "start_date": "2026-08-08",
+      "end_date": "2026-08-09",
+      "items": [
+        {
+          "id": "itm_100",
+          "title": "The goal is to make you an AI-Native Professionals",
+          "type": "topic_group",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": []
+        },
+        {
+          "id": "itm_101",
+          "title": "Generative AI Building Blocks [Topics to be covered in live lectures]",
+          "type": "topic_group",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": []
+        },
+        {
+          "id": "itm_106",
+          "title": "Weekly Project",
+          "type": "project",
+          "date": "2026-08-09",
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_106a",
+              "label": "Project Brief",
+              "kind": "text",
+              "url": null,
+              "text": "Build a single-tool agent: wrap one API of your choice as a tool and drive it from a chat loop. Submit a repo link."
+            }
+          ]
+        },
+        {
+          "id": "itm_103",
+          "title": "Live Session 1- Week 1",
+          "type": "live_session",
+          "date": "2026-08-08",
+          "start_time": "20:30",
+          "end_time": "22:30",
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_103a",
+              "label": "Recording",
+              "kind": "link",
+              "url": null,
+              "text": null
+            },
+            {
+              "id": "res_103b",
+              "label": "Slides",
+              "kind": "link",
+              "url": "https://example.com/slides/live-session-1-week-1",
+              "text": null
+            }
+          ]
+        },
+        {
+          "id": "itm_107",
+          "title": "Week 1 Handouts and Resources",
+          "type": "reading",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": true,
+          "completed": false,
+          "resources": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Grounding AI with RAG & Context Engineering",
+      "start_date": "2026-08-10",
+      "end_date": "2026-08-16",
+      "items": [
+        {
+          "id": "itm_104",
+          "title": "Live Session 2 - Week 1",
+          "type": "live_session",
+          "date": "2026-08-12",
+          "start_time": "07:30",
+          "end_time": "09:30",
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_104a",
+              "label": "Slides",
+              "kind": "link",
+              "url": null,
+              "text": null
+            }
+          ]
+        },
+        {
+          "id": "itm_102",
+          "title": "The Curious Agents Club- Office Hours",
+          "type": "office_hours",
+          "date": "2026-08-14",
+          "start_time": "08:30",
+          "end_time": "09:30",
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": true,
+          "resources": [
+            {
+              "id": "res_102a",
+              "label": "Recording",
+              "kind": "link",
+              "url": "https://example.com/recordings/office-hours-w1",
+              "text": null
+            }
+          ]
+        },
+        {
+          "id": "itm_201",
+          "title": "Grounding AI with RAG & Context Engineering [ To be covered in live lectures]",
+          "type": "topic_group",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": []
+        },
+        {
+          "id": "itm_208",
+          "title": "Week 2 Project Handout",
+          "type": "project",
+          "date": "2026-08-16",
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_208a",
+              "label": "Project Brief",
+              "kind": "text",
+              "url": null,
+              "text": "Extend your Week 1 agent with retrieval: index a small document set and ground the agent's answers in it."
+            }
+          ]
+        },
+        {
+          "id": "itm_203",
+          "title": "Live Session 1- Week 2",
+          "type": "live_session",
+          "date": "2026-08-15",
+          "start_time": "20:30",
+          "end_time": "22:30",
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_203a",
+              "label": "Slides",
+              "kind": "link",
+              "url": null,
+              "text": null
+            }
+          ]
+        },
+        {
+          "id": "itm_205",
+          "title": "Guest Lecture (Cohort Only)- Brandon Middleton - Replit",
+          "type": "guest_lecture",
+          "date": "2026-08-10",
+          "start_time": "20:30",
+          "end_time": "21:30",
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": [
+            {
+              "id": "res_205a",
+              "label": "Recording",
+              "kind": "link",
+              "url": null,
+              "text": null
+            }
+          ]
+        },
+        {
+          "id": "itm_209",
+          "title": "Brandon Middletone (Replit)- Guest Lecture Handout",
+          "type": "reading",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": false,
+          "completed": false,
+          "resources": []
+        },
+        {
+          "id": "itm_207",
+          "title": "Week2 Handouts and Resources",
+          "type": "reading",
+          "date": null,
+          "start_time": null,
+          "end_time": null,
+          "timezone": "GMT+5:30",
+          "optional": true,
+          "completed": false,
+          "resources": []
+        }
+      ]
+    }
+  ]
+}
