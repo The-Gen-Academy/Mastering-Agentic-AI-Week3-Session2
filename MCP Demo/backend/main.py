@@ -4,7 +4,7 @@ Deliberately plain, resource-oriented CRUD. No auth — every endpoint is
 open. The interesting design lives in the MCP server, which consumes this
 API; the React frontend only uses the GET endpoints.
 
-Run:  uv run uvicorn main:app --reload --port 8000  (from backend/)
+Run: ./dev backend (from the project root), or ../dev backend (from backend/).
 """
 
 import secrets

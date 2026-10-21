@@ -37,8 +37,8 @@ def main() -> int:
     server = build_server(entries)
     logger.info("Serving MCP over Streamable HTTP at http://%s:%d%s", host, port, mcp_path)
 
-    # Stateless: every POST gets a fresh transport. Nothing here needs server-push,
-    # so there is no session state to track and no GET/SSE or DELETE route to serve.
+    # JSON responses, with no session state or application-published updates.
+    # stateless_http also keeps legacy (pre-2026) clients session-free.
     server.run(
         transport="streamable-http",
         host=host,

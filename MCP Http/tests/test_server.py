@@ -1,9 +1,9 @@
-"""V1 contract: the server lists documents and refuses to serve their content."""
+"""Resources retain their directory interface; tools list and read handouts."""
 
 from __future__ import annotations
 
 import pytest
-from mcp.server.mcpserver.exceptions import ResourceError
+from mcp.server.mcpserver.exceptions import ResourceError, ToolError
 
 from course_docs_mcp.registry import load_registry
 from course_docs_mcp.server import build_resources, build_server
@@ -37,14 +37,27 @@ async def test_read_refuses_with_an_explanation(entries):
     with pytest.raises(ResourceError) as excinfo:
         await resource.read()
     message = str(excinfo.value)
-    assert "V1" in message
+    assert "read_course_document" in message
     assert resource.uri in message
 
 
 @pytest.mark.anyio
-async def test_server_exposes_no_tools(entries):
+async def test_server_exposes_read_only_tools(entries):
     server = build_server(entries)
-    assert await server.list_tools() == []
+    tools = await server.list_tools()
+    assert {t.name for t in tools} == {"list_course_documents", "read_course_document"}
+    assert all(t.annotations.read_only_hint for t in tools)
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("name", ["cohort-faq", "onboarding-guidebook", "https://example.com", "../secret"])
+async def test_read_rejects_unknown_names_without_fetching(entries, monkeypatch, name):
+    async def unexpected_fetch(entry):
+        pytest.fail("Unknown document must not trigger a network request")
+
+    monkeypatch.setattr("course_docs_mcp.server.fetch_document", unexpected_fetch)
+    with pytest.raises(ToolError, match="Unknown document name"):
+        await build_server(entries).call_tool("read_course_document", {"name": name})
 
 
 @pytest.mark.anyio

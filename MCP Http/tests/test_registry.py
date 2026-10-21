@@ -37,8 +37,11 @@ def write(tmp_path: Path, data: object) -> Path:
 
 def test_shipped_registry_is_valid():
     entries = load_registry(REAL_CONFIG)
-    assert len(entries) == 5
-    assert len({e.name for e in entries}) == 5
+    assert [e.name for e in entries] == [
+        "week-1-project-handout",
+        "week-2-rag-project-handout",
+        "week-3-agent-project-handout",
+    ]
 
 
 def test_google_doc_uri_is_a_markdown_export_link():

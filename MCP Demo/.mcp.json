@@ -1,10 +1,13 @@
 {
   "mcpServers": {
     "course-platform": {
-      "command": "uv",
-      "args": ["run", "python", "/Users/arvindna/Desktop/Maven Demos/Week3/Session2/MCP Demo/mcp_server/mcp_server.py"],
+      "command": "/bin/bash",
+      "args": [
+        "/Users/arvindna/Desktop/Maven Demos/MAI/Week3/Session2/MCP Demo/dev",
+        "mcp"
+      ],
       "env": {
-        "UV_PROJECT": "/Users/arvindna/Desktop/Maven Demos/Week3/Session2/MCP Demo"
+        "UV_BIN": "/opt/homebrew/bin/uv"
       }
     }
   }

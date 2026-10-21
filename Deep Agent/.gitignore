@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets
+.env
+
+# Agent-generated artifacts
+/research/
+/drafts/
+/final/
+/artifacts/
+.DS_Store

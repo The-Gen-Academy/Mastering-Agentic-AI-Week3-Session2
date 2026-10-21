@@ -1,9 +1,7 @@
-"""Smoke test: connect to the running server and print what it advertises.
+"""Verify discovery and read every registered handout over the running MCP server.
 
-Usage:  uv run python scripts/smoke.py [url]      (default http://127.0.0.1:8000/mcp)
-
-Verifies the whole V1 contract end to end: initialize, resources/list, and that
-resources/read refuses with the V1 explanation instead of a bare protocol error.
+Usage: uv run python scripts/smoke.py [url]
+This check fetches live public documents from Google through the read tool.
 """
 
 from __future__ import annotations
@@ -11,47 +9,69 @@ from __future__ import annotations
 import asyncio
 import sys
 
-from mcp import ClientSession
-from mcp.client.streamable_http import streamable_http_client
+from mcp import Client, MCPError
 
 DEFAULT_URL = "http://127.0.0.1:8000/mcp"
+EXPECTED_PROTOCOL = "2026-07-28"
+EXPECTED_TOOLS = {"list_course_documents", "read_course_document"}
+EXPECTED_DOCUMENTS = {
+    "week-1-project-handout", "week-2-rag-project-handout", "week-3-agent-project-handout",
+}
 
 
 async def main(url: str) -> int:
-    async with streamable_http_client(url) as (read, write):
-        async with ClientSession(read, write) as session:
-            init = await session.initialize()
-            print(f"connected to {init.server_info.name} v{init.server_info.version}  ({url})")
-            print(f"protocol: {init.protocol_version}")
-            print(f"capabilities: resources={init.capabilities.resources is not None}, "
-                  f"tools={init.capabilities.tools is not None}\n")
+    async with Client(url) as client:
+        info = client.server_info
+        if info is None:
+            raise ValueError("Server did not report its identity")
+        print(f"connected to {info.name} v{info.version} ({url})")
+        if client.protocol_version != EXPECTED_PROTOCOL:
+            raise ValueError(f"Expected MCP {EXPECTED_PROTOCOL}, got {client.protocol_version}")
+        resources = client.server_capabilities.resources
+        if resources is None or resources.subscribe or resources.list_changed:
+            raise ValueError("Expected static resources without subscriptions")
 
-            result = await session.list_resources()
-            print(f"resources/list -> {len(result.resources)} resources\n")
-            for r in result.resources:
-                print(f"  {r.name}")
-                print(f"    title     {r.title}")
-                print(f"    mimeType  {r.mime_type}")
-                print(f"    uri       {r.uri}")
-                print(f"    desc      {r.description}")
-                print()
+        tools = (await client.list_tools()).tools
+        if {t.name for t in tools} != EXPECTED_TOOLS:
+            raise ValueError("Expected list_course_documents and read_course_document; restart the server")
+        if not all(t.annotations and t.annotations.read_only_hint for t in tools):
+            raise ValueError("Both tools must be annotated as read-only")
+        print(f"tools/list -> {len(tools)} read-only tools")
 
-            if not result.resources:
-                print("FAIL: server advertised no resources")
-                return 1
+        listed = (await client.list_resources()).resources
+        catalog = await client.call_tool("list_course_documents", {})
+        if catalog.is_error or not catalog.structured_content:
+            raise ValueError(f"Could not list documents: {catalog.content}")
+        documents = catalog.structured_content["result"]
+        if len(documents) != 3 or {d["name"] for d in documents} != EXPECTED_DOCUMENTS:
+            raise ValueError("Expected only the three project handouts")
+        if {(r.name, r.uri) for r in listed} != {(d["name"], d["url"]) for d in documents}:
+            raise ValueError("Resource directory and document tool disagree")
+        print(f"resources/list and list_course_documents -> {len(documents)} handouts")
 
-            # V1 contract: reading is the client's job, and refusal must be explanatory.
-            probe = result.resources[0]
-            try:
-                await session.read_resource(str(probe.uri))
-            except Exception as exc:
-                print(f"resources/read -> refused as expected:\n  {exc}\n")
-            else:
-                print("FAIL: resources/read returned content; V1 should not serve content")
-                return 1
+        for document in documents:
+            result = await client.call_tool("read_course_document", {"name": document["name"]})
+            if result.is_error or not result.structured_content:
+                raise ValueError(f"Could not read {document['name']}: {result.content}")
+            data = result.structured_content
+            if not data["content"].strip() or data["url"] != document["url"] or data["title"] != document["title"]:
+                raise ValueError(f"Missing content or attribution for {document['name']}")
+            print(f"  read {document['name']}: {len(data['content'])} characters, source attribution present")
 
-            print("OK")
-            return 0
+        invalid = await client.call_tool("read_course_document", {"name": "onboarding-guidebook"})
+        if not invalid.is_error or "Unknown document name" not in invalid.content[0].text:
+            raise ValueError("Removed documents must not be readable")
+
+        probe = listed[0]
+        try:
+            await client.read_resource(probe.uri)
+        except MCPError as exc:
+            if "read_course_document" not in exc.error.message or probe.uri not in exc.error.message:
+                raise ValueError(f"Unexpected resources/read error: {exc}") from exc
+        else:
+            raise ValueError("Resources should retain the directory-only interface")
+        print("OK")
+        return 0
 
 
 if __name__ == "__main__":

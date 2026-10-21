@@ -36,8 +36,7 @@ class DocEntry(BaseModel):
     # drive_file only: the file's own type, since Drive files are not converted.
     mime_type: str | None = None
 
-    # Descriptive metadata. Not sent over the wire in V1; kept here so a future
-    # search tool can filter without a second source of truth.
+    # Descriptive metadata returned by list_course_documents.
     week_scope: str | None = None
     source_role: str | None = None
 

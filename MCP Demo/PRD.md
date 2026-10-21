@@ -55,7 +55,7 @@ Both personas interact through Claude Code in the demo; the React UI is the alwa
 ## 4. System Architecture
 
 ```
-React (Vite, :5173) ──HTTP GET──▶ FastAPI (:8000) ◀──HTTP── MCP Server (Python/FastMCP)
+React (Vite, :5173) ──HTTP GET──▶ FastAPI (:8000) ◀──HTTP── MCP Server (Python/MCPServer)
                                       │                          ▲
                                 data/curriculum.json             │ stdio (JSON-RPC)
                                 (mock database)             Claude Code
@@ -118,7 +118,7 @@ Implementation notes:
 
 ---
 
-## 7. MCP Server (Python, FastMCP, stdio)
+## 7. MCP Server (Python, MCPServer, stdio)
 
 ### Design principles
 
@@ -197,7 +197,7 @@ MCP Demo/
 │   ├── models.py              # Pydantic models
 │   └── storage.py             # atomic JSON read/write
 ├── mcp_server/
-│   └── mcp_server.py          # FastMCP server (4 tools + name resolution)
+│   └── mcp_server.py          # MCPServer (4 tools + name resolution)
 └── frontend/
     └── (Vite + React app)     # read-only curriculum viewer
 ```
@@ -206,7 +206,7 @@ MCP Demo/
 
 ## 11. Success Criteria
 
-1. `uvicorn`, `vite`, and Claude Code can all be started locally and work together with zero config beyond `npm install` / `uv sync`.
+1. After `./dev setup`, `./dev backend`, `./dev frontend`, and Claude Code work together locally. The launcher uses the project-local environment regardless of the caller's working directory or stale shell activation; rerun setup after moving the project to regenerate MCP registration.
 2. All four MCP tools function end-to-end from Claude Code.
 3. Demo 2 produces a visible UI change within ~2 seconds of the tool call.
 4. Fuzzy resolution handles partial references ("the NVIDIA one", "live session 1") and asks for disambiguation when genuinely ambiguous.

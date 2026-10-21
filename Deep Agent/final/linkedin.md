@@ -1,15 +1,15 @@
-AI-curious engineers don’t need another prompt list. They need reps shipping real systems.
+AI-curious engineers: in 6 weeks, move beyond demos.
 
-If you’ve tried AI tools, you already know the gap: using AI is not the same as building AI you can explain, evaluate, and trust in production.
+The next cohort of The Gen Academy’s Mastering Agentic AI Certification is built for working software engineers who want production-ready agentic AI skills, not another prompt-hack playlist.
 
-Mastering Agentic AI Certification is a 6-week intensive built for working software engineers who want production-ready knowledge, not theory. You’ll build hands-on projects, complete a capstone, and learn from guest instructors from Google, Microsoft, Adobe, and Fireworks AI.
+You’ll build hands-on projects, complete a capstone, and learn the systems behind real agentic workflows: orchestration, evaluation, guardrails, and the engineering judgment to ship responsibly.
 
-Then there’s a bonus 7th career week focused on portfolio building, job-market navigation, and career coaching.
+It’s a 6-week intensive, plus a bonus 7th career week. The curriculum is battle-tested, taught by people who’ve built it, with guest instructors from Google, Microsoft, Adobe, and Fireworks AI.
 
-The Gen Academy has reached 50,000+ learners and trained/upskilled 2,500+ professionals, with curriculum distilled from 7 years building AI systems at major tech companies.
+2,500+ professionals trained. 50,000+ learners reached.
 
-Ship real work. Land real opportunities.
+From AI-curious to production-ready. Ship real work. Land real opportunities.
 
-Apply for the next cohort of Mastering Agentic AI Certification.
+DM us “AGENTIC” to learn more.
 
-#AgenticAI #SoftwareEngineering #AIEngineering #CareerGrowth
+#AgenticAI #SoftwareEngineering #AIEngineering #GenerativeAI

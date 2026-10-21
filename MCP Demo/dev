@@ -1,0 +1,85 @@
+#!/bin/bash
+# Local development entry point. Paths are relative to this file, never the caller.
+set -euo pipefail
+
+PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+action="${1:-help}"
+if [ "$#" -gt 0 ]; then shift; fi
+
+case "$action" in
+    setup|backend|mcp|test|python|frontend|build) ;;
+    help|-h|--help)
+        echo "Usage: ./dev {setup|backend|frontend|build|mcp|test|python} [arguments]"
+        exit 0 ;;
+    *) echo "Unknown command: $action. Run ./dev help." >&2; exit 2 ;;
+esac
+
+# A child process cannot deactivate the caller's shell, but it can avoid using it.
+unset VIRTUAL_ENV PYTHONHOME PYTHONPATH UV_PROJECT UV_WORKING_DIRECTORY
+export UV_PROJECT_ENVIRONMENT="$PROJECT_ROOT/.venv"
+cd "$PROJECT_ROOT"
+
+if [ "$action" = frontend ] || [ "$action" = build ]; then
+    cd "$PROJECT_ROOT/frontend"
+    if [ "$action" = frontend ]; then
+        exec npm run dev -- "$@"
+    fi
+    exec npm run build -- "$@"
+fi
+
+if [ -z "${UV_BIN:-}" ]; then
+    UV_BIN="$(command -v uv || true)"
+    if [ -z "$UV_BIN" ]; then
+        for candidate in /opt/homebrew/bin/uv "$HOME/.local/bin/uv" /usr/local/bin/uv; do
+            if [ -x "$candidate" ]; then UV_BIN="$candidate"; break; fi
+        done
+    fi
+fi
+if [ -z "${UV_BIN:-}" ] || [ ! -x "$UV_BIN" ]; then
+    echo "uv was not found. Install uv or set UV_BIN to its absolute executable path." >&2
+    exit 1
+fi
+export UV_BIN
+
+# Virtual environments contain absolute paths and must be recreated after a move.
+# Only the generated .venv is cleared; source files and curriculum are untouched.
+marker="$PROJECT_ROOT/.venv/.project-root"
+recorded_root=""
+if [ -f "$marker" ]; then recorded_root="$(cat "$marker")"; fi
+if [ "$recorded_root" != "$PROJECT_ROOT" ] || [ ! -x "$PROJECT_ROOT/.venv/bin/python" ]; then
+    if [ -L "$PROJECT_ROOT/.venv" ]; then
+        echo "Refusing to recreate a symlinked .venv; use a project-local environment." >&2
+        exit 1
+    fi
+    echo "Preparing Python environment in $PROJECT_ROOT/.venv" >&2
+    "$UV_BIN" venv --clear --prompt mcp-course-demo \
+        --python "$(cat "$PROJECT_ROOT/.python-version")" "$PROJECT_ROOT/.venv" >&2
+    "$UV_BIN" sync --locked --project "$PROJECT_ROOT" >&2
+    printf '%s\n' "$PROJECT_ROOT" > "$marker"
+fi
+
+case "$action" in
+    setup)
+        "$UV_BIN" sync --locked --project "$PROJECT_ROOT" >&2
+        "$UV_BIN" run --locked --project "$PROJECT_ROOT" python scripts/configure_mcp.py
+        (cd frontend && npm ci)
+        echo "Ready. Run ./dev backend and ./dev frontend in separate terminals."
+        ;;
+    backend)
+        exec "$UV_BIN" run --locked --project "$PROJECT_ROOT" python -m uvicorn \
+            main:app --app-dir "$PROJECT_ROOT/backend" --reload \
+            --reload-dir "$PROJECT_ROOT/backend" --host 127.0.0.1 --port 8000 "$@"
+        ;;
+    mcp)
+        # Keep stdout exclusively for MCP JSON-RPC messages.
+        exec "$UV_BIN" run --locked --project "$PROJECT_ROOT" python \
+            "$PROJECT_ROOT/mcp_server/mcp_server.py" "$@"
+        ;;
+    test)
+        exec "$UV_BIN" run --locked --project "$PROJECT_ROOT" python \
+            -m unittest discover -s "$PROJECT_ROOT/tests" -v "$@"
+        ;;
+    python)
+        exec "$UV_BIN" run --locked --project "$PROJECT_ROOT" python "$@"
+        ;;
+esac

@@ -1,11 +1,12 @@
 [project]
 name = "course-docs-mcp"
-version = "0.1.0"
-description = "Read-only Streamable HTTP MCP server exposing public course Google Docs as MCP resources."
+version = "0.2.0"
+description = "Read-only MCP tools and resources for public course project handouts."
 requires-python = ">=3.10"
 dependencies = [
-    "mcp>=1.9.0",
+    "mcp>=2.3.0,<3",
     "pydantic>=2.7",
+    "httpx2>=2.10.0,<3",
 ]
 
 [project.scripts]

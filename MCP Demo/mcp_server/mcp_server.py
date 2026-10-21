@@ -15,15 +15,27 @@ Tools:
 Transport: stdio (launched by Claude Code via .mcp.json).
 """
 
+from contextlib import contextmanager
 from datetime import datetime, time
 from difflib import SequenceMatcher
+import os
+from typing import Iterator
 
 import httpx
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
+from mcp.types import ToolAnnotations
 
-API = "http://localhost:8000"
+API = os.environ.get("COURSE_API_URL", "http://localhost:8000")
 
-mcp = FastMCP("course-platform")
+mcp = MCPServer("course-platform", version="0.1.0")
+
+READ_ONLY = ToolAnnotations(
+    read_only_hint=True,
+    destructive_hint=False,
+    idempotent_hint=True,
+    open_world_hint=False,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -31,8 +43,27 @@ mcp = FastMCP("course-platform")
 # ---------------------------------------------------------------------------
 
 
-def _api() -> httpx.Client:
-    return httpx.Client(base_url=API, timeout=10.0)
+@contextmanager
+def _api() -> Iterator[httpx.Client]:
+    try:
+        with httpx.Client(
+            base_url=API, timeout=10.0, event_hooks={"response": [_check_response]}
+        ) as client:
+            yield client
+    except httpx.RequestError as exc:
+        raise ToolError(
+            "Cannot reach the course API. Start the FastAPI backend and check "
+            "COURSE_API_URL (default: http://localhost:8000)."
+        ) from exc
+
+
+def _check_response(response: httpx.Response) -> None:
+    """Expose actionable HTTP failures through the v2 tool error boundary."""
+    if response.is_error:
+        raise ToolError(
+            f"The course API returned HTTP {response.status_code}. "
+            "Check that the backend is running and the requested item still exists."
+        )
 
 
 def _fetch_items(client: httpx.Client) -> list[dict]:
@@ -95,6 +126,8 @@ def _resolve(client: httpx.Client, session: str) -> dict | str:
     string the model can act on.
     """
     items = _fetch_items(client)
+    if not items:
+        return "The curriculum is empty; there are no sessions to look up."
     scored = sorted(
         ((_score(session, item["title"]), item) for item in items),
         key=lambda pair: pair[0],
@@ -173,7 +206,7 @@ def _session_end(item: dict) -> datetime:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def get_schedule(week: int | None = None) -> str:
     """Show the course schedule as a chronological digest.
 
@@ -211,7 +244,7 @@ def get_schedule(week: int | None = None) -> str:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def get_session_details(session: str) -> str:
     """Get full details for one curriculum item: timing and all its
     resources (recording, slides, notes) with their links.
@@ -240,7 +273,14 @@ def get_session_details(session: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        read_only_hint=False,
+        destructive_hint=True,
+        idempotent_hint=True,
+        open_world_hint=False,
+    )
+)
 def publish_recording(session: str, recording_url: str) -> str:
     """Publish the recording URL for a session that has already taken place.
 
@@ -293,7 +333,7 @@ def publish_recording(session: str, recording_url: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def whats_next() -> str:
     """Tell the student what to focus on right now: anything they've missed,
     what's happening today, and what's coming up — required work first.
@@ -362,4 +402,4 @@ def whats_next() -> str:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="stdio")

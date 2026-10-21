@@ -67,7 +67,7 @@
               "id": "res_103a",
               "label": "Recording",
               "kind": "link",
-              "url": "https://www.youtube.com/watch?v=cI2WTKzxgEE&t=2s",
+              "url": null,
               "text": null
             },
             {
@@ -115,6 +115,13 @@
               "label": "Slides",
               "kind": "link",
               "url": null,
+              "text": null
+            },
+            {
+              "id": "res_f6a974c0",
+              "label": "Recording",
+              "kind": "link",
+              "url": "https://www.youtube.com/watch?v=63thtuCVUw0",
               "text": null
             }
           ]

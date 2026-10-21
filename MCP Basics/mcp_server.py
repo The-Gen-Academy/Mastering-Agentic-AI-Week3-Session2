@@ -1,11 +1,11 @@
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 import datetime
 
 # Create an MCP server
-mcp = FastMCP("Langgraph_MCP_Server")
+mcp = MCPServer("Langgraph_MCP_Server", version="0.1.0")
 
 
-# Add an addition tool
+# Each tool receives everything it needs in its arguments.
 @mcp.tool()
 def get_return_policy() -> str:  
     """Provide the return policy for the product"""
@@ -70,4 +70,4 @@ def summarize_order(order_id: str) -> str:
 
 
 if __name__ == "__main__":
-    mcp.run() #stdio
+    mcp.run(transport="stdio")
